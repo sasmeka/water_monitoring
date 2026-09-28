@@ -1,0 +1,4 @@
+include:
+  - project: 'infra/cicd'
+    ref: master
+    file: 'sps-api-ci.yml'

@@ -1,0 +1,30 @@
+when:
+  event:
+    - push
+
+steps:
+  deploy:
+    image: alpine:latest
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/ryd/projects/ryd_skolapedia_api_auth:/app
+
+    commands:
+      - apk add --no-cache git docker-cli docker-cli-compose
+
+      - cd /app
+
+      - |
+        if [ ! -d ".git" ]; then
+          echo "Repository belum ada, cloning..."
+          rm -rf ./*
+          git clone https://github.com/sasmeka/ryd_skolapedia_api_auth.git .
+        else
+          echo "Repository sudah ada, pulling..."
+          git reset --hard
+          git pull
+        fi
+
+      - docker compose -p ryd_skolapedia_api_auth up -d --build --remove-orphans
+      - docker image prune -f

@@ -1,0 +1,34 @@
+services:
+  skolapedia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-water-monitoring
+    restart: unless-stopped
+    ports:
+      - "7070:7070"
+    environment:
+      # ------------------------------- POSTGRESQL -------------------------------
+      PG_USER: "casaos"
+      PG_HOST: "postgresql"
+      PG_PASSWORD: "casaos"
+      PG_PORT: "5432"
+
+      # ------------------------------- GIN GONIC -------------------------------
+      APP_NAME: "API-WATER-MONITORING"
+      PORT: "7070"
+      GIN_MODE: "release"
+      LOGIN_TIME: "1440"
+      JWTSECRET: "ajiksdbnajibdwujiabdjiawbdjiawbdjiawbndjiawdbjiawdbji"
+
+      # ------------------------------- REDIS ---------------------------------
+      REDISDB: "redis-server:6379"
+      REDISDBPOLL: "100"
+      REDISDBMINIDLE: "20"
+      REDISUSER: ""
+      REDISPASSWORD: ""
+    networks:
+      - internal-net
+networks:
+  internal-net:
+    external: true

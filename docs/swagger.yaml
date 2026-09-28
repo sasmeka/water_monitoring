@@ -1,0 +1,252 @@
+basePath: /water-monitoring/auth
+definitions:
+  models.BodyWaterMonitoring:
+    properties:
+      id_device:
+        example: DEV-001
+        type: string
+      ph:
+        example: 7.51
+        type: number
+      status:
+        example: TIDAK_NORMAL
+        type: string
+      suhu_air:
+        example: 26.75
+        type: number
+      tds:
+        example: 55.21
+        type: number
+      turbidity:
+        example: 2049.89
+        type: number
+      waktu:
+        example: "2026-09-15 07:14:50"
+        type: string
+    type: object
+  models.BodyWaterMonitoringBatch:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.BodyWaterMonitoring'
+        type: array
+    type: object
+  models.HTTP400:
+    properties:
+      pesan:
+        example: Bad Request / Custom Error
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  models.HTTP404:
+    properties:
+      pesan:
+        example: Not Found / Custom Error
+        type: string
+      status:
+        example: 404
+        type: integer
+    type: object
+  models.HTTP500:
+    properties:
+      pesan:
+        example: Internal Server Error / Custom Error
+        type: string
+      status:
+        example: 500
+        type: integer
+    type: object
+  models.ResWaterMonitoring_HTTP200:
+    properties:
+      data:
+        $ref: '#/definitions/models.WaterMonitoring'
+      pesan:
+        example: OK
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  models.ResWaterMonitoringList_HTTP200:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.WaterMonitoring'
+        type: array
+      pesan:
+        example: OK
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  models.WaterMonitoring:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      id_device:
+        example: DEV-001
+        type: string
+      ph:
+        example: 7.51
+        type: number
+      status:
+        example: TIDAK_NORMAL
+        type: string
+      suhu_air:
+        example: 26.75
+        type: number
+      tds:
+        example: 55.21
+        type: number
+      turbidity:
+        example: 2049.89
+        type: number
+      waktu:
+        example: "2026-09-15T07:14:50Z"
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Water Monitoring Backend
+  version: "1.0"
+paths:
+  /water-monitoring:
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan daftar data hasil monitoring air dengan pagination
+        dan opsional filter id_device
+      parameters:
+      - description: 'Filter berdasarkan ID Device (misal: DEV-001)'
+        in: query
+        name: id_device
+        type: string
+      - description: Halaman (default 1)
+        in: query
+        name: page
+        type: integer
+      - description: Jumlah data per halaman (default 10)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResWaterMonitoringList_HTTP200'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTP500'
+      summary: Ambil Riwayat Data Water Monitoring
+      tags:
+      - Water Monitoring
+    post:
+      consumes:
+      - application/json
+      description: Menyimpan data hasil monitoring air (Suhu, pH, TDS, Turbidity,
+        Status, dll)
+      parameters:
+      - description: Data Water Monitoring
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/models.BodyWaterMonitoring'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResWaterMonitoring_HTTP200'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTP400'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTP500'
+      summary: Input Data Water Monitoring
+      tags:
+      - Water Monitoring
+  /water-monitoring/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Mendapatkan 1 data hasil monitoring air berdasarkan id
+      parameters:
+      - description: ID Data Monitoring
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResWaterMonitoring_HTTP200'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTP400'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTP404'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTP500'
+      summary: Ambil Detail Data Water Monitoring by ID
+      tags:
+      - Water Monitoring
+  /water-monitoring/batch:
+    post:
+      consumes:
+      - application/json
+      description: Menyimpan array data hasil monitoring air sekaligus
+      parameters:
+      - description: Batch Data Water Monitoring
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/models.BodyWaterMonitoringBatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResWaterMonitoringList_HTTP200'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTP400'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTP500'
+      summary: Input Banyak Data Water Monitoring (Batch/Bulk)
+      tags:
+      - Water Monitoring
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- name: Auth
+- name: Profile

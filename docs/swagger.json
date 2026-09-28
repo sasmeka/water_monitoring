@@ -1,0 +1,374 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Water Monitoring Backend",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/water-monitoring/auth",
+    "paths": {
+        "/water-monitoring": {
+            "get": {
+                "description": "Mendapatkan daftar data hasil monitoring air dengan pagination dan opsional filter id_device",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Water Monitoring"
+                ],
+                "summary": "Ambil Riwayat Data Water Monitoring",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter berdasarkan ID Device (misal: DEV-001)",
+                        "name": "id_device",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Halaman (default 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Jumlah data per halaman (default 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResWaterMonitoringList_HTTP200"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP500"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Menyimpan data hasil monitoring air (Suhu, pH, TDS, Turbidity, Status, dll)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Water Monitoring"
+                ],
+                "summary": "Input Data Water Monitoring",
+                "parameters": [
+                    {
+                        "description": "Data Water Monitoring",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BodyWaterMonitoring"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResWaterMonitoring_HTTP200"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP400"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP500"
+                        }
+                    }
+                }
+            }
+        },
+        "/water-monitoring/batch": {
+            "post": {
+                "description": "Menyimpan array data hasil monitoring air sekaligus",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Water Monitoring"
+                ],
+                "summary": "Input Banyak Data Water Monitoring (Batch/Bulk)",
+                "parameters": [
+                    {
+                        "description": "Batch Data Water Monitoring",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BodyWaterMonitoringBatch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResWaterMonitoringList_HTTP200"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP400"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP500"
+                        }
+                    }
+                }
+            }
+        },
+        "/water-monitoring/{id}": {
+            "get": {
+                "description": "Mendapatkan 1 data hasil monitoring air berdasarkan id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Water Monitoring"
+                ],
+                "summary": "Ambil Detail Data Water Monitoring by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID Data Monitoring",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResWaterMonitoring_HTTP200"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP400"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP404"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HTTP500"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.BodyWaterMonitoring": {
+            "type": "object",
+            "properties": {
+                "id_device": {
+                    "type": "string",
+                    "example": "DEV-001"
+                },
+                "ph": {
+                    "type": "number",
+                    "example": 7.51
+                },
+                "status": {
+                    "type": "string",
+                    "example": "TIDAK_NORMAL"
+                },
+                "suhu_air": {
+                    "type": "number",
+                    "example": 26.75
+                },
+                "tds": {
+                    "type": "number",
+                    "example": 55.21
+                },
+                "turbidity": {
+                    "type": "number",
+                    "example": 2049.89
+                },
+                "waktu": {
+                    "type": "string",
+                    "example": "2026-09-15 07:14:50"
+                }
+            }
+        },
+        "models.BodyWaterMonitoringBatch": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.BodyWaterMonitoring"
+                    }
+                }
+            }
+        },
+        "models.HTTP400": {
+            "type": "object",
+            "properties": {
+                "pesan": {
+                    "type": "string",
+                    "example": "Bad Request / Custom Error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 400
+                }
+            }
+        },
+        "models.HTTP404": {
+            "type": "object",
+            "properties": {
+                "pesan": {
+                    "type": "string",
+                    "example": "Not Found / Custom Error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 404
+                }
+            }
+        },
+        "models.HTTP500": {
+            "type": "object",
+            "properties": {
+                "pesan": {
+                    "type": "string",
+                    "example": "Internal Server Error / Custom Error"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 500
+                }
+            }
+        },
+        "models.ResWaterMonitoringList_HTTP200": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.WaterMonitoring"
+                    }
+                },
+                "pesan": {
+                    "type": "string",
+                    "example": "OK"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "models.ResWaterMonitoring_HTTP200": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.WaterMonitoring"
+                },
+                "pesan": {
+                    "type": "string",
+                    "example": "OK"
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "models.WaterMonitoring": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "id_device": {
+                    "type": "string",
+                    "example": "DEV-001"
+                },
+                "ph": {
+                    "type": "number",
+                    "example": 7.51
+                },
+                "status": {
+                    "type": "string",
+                    "example": "TIDAK_NORMAL"
+                },
+                "suhu_air": {
+                    "type": "number",
+                    "example": 26.75
+                },
+                "tds": {
+                    "type": "number",
+                    "example": 55.21
+                },
+                "turbidity": {
+                    "type": "number",
+                    "example": 2049.89
+                },
+                "waktu": {
+                    "type": "string",
+                    "example": "2026-09-15T07:14:50Z"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth"
+        },
+        {
+            "name": "Profile"
+        }
+    ]
+}

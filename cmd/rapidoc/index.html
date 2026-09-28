@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Auth Backend - Docs</title>
+     <link rel="icon" href="favicon.png" type="image/x-icon">
+    <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const origin = window.location.origin;
+        const pathname = window.location.pathname;
+        const basePath = pathname.replace(/\/docs\/?$/, '').replace('/documentation', '');
+        const specURL = `${origin}${basePath}docs/doc.json`;
+        const logoURL = `${origin}${basePath}documentation/logo.png`;
+        const rapi = document.createElement("rapi-doc");
+        rapi.setAttribute("spec-url", specURL);
+        rapi.setAttribute("theme", "light");
+        rapi.setAttribute("render-style", "read");
+        rapi.setAttribute("allow-try", "true");
+        rapi.setAttribute("show-header", "true");
+        rapi.setAttribute("authorization-method", "bearer");
+        rapi.setAttribute("allow-authentication", "true");
+        rapi.setAttribute("heading-text", "Auth Backend");
+        document.body.appendChild(rapi);
+
+        // Tunggu hingga RapiDoc selesai render
+        setTimeout(() => {
+          const shadowRoot = rapi.shadowRoot;
+          const slot = shadowRoot?.querySelector('slot[name="logo"]');
+          if (slot) {
+            const img = document.createElement("img");
+            img.src = logoURL;
+            img.style.height = "20px";
+            img.style.marginLeft = "5px";
+            slot.replaceWith(img);
+          }
+        }, 1000); // waktu tunggu bisa diatur sesuai loading
+      });
+    </script>
+  </head>
+  <body></body>
+</html>

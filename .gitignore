@@ -1,0 +1,9 @@
+/.git
+/.vscode
+
+.git/*
+.vscode/*
+
+.env
+
+__debug_bin*
