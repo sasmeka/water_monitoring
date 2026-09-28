@@ -1,4 +1,4 @@
-FROM registry.tanobel.net/tanobel/public/golang:1.24.1
+FROM docker.io/library/golang:1.24.1
 ENV TZ=Asia/Jakarta
 WORKDIR /app/source
 COPY . .
